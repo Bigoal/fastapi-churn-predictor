@@ -4,35 +4,47 @@ import pandas as pd
 
 # create app
 app = FastAPI()
-gender_map = {
-    "Male": 1,
-    "Female": 0
-}
 
-partner_map = {
-    "Yes": 1,
-    "No": 0
-}
+# mappings
+gender_map = {"Male": 1, "Female": 0}
+partner_map = {"Yes": 1, "No": 0}
+dependents_map = {"Yes": 1, "No": 0}
+binary_map = {"Yes": 1, "No": 0}
 
-dependents_map = {
-    "Yes": 1,
-    "No": 0
-}
-
-binary_map = {
-    "Yes": 1,
-    "No": 0
-}
 # load model
 data = joblib.load("churn_model.pkl")
 model = data["model"]
 features = data["features"]
 
+# POST route (original)
 @app.post("/predict")
 def predict(input_data: dict):
+    return make_prediction(input_data)
 
+# GET route (browser-friendly)
+@app.get("/predict")
+def predict_get(
+    gender: str,
+    Partner: str,
+    Dependents: str,
+    PhoneService: str,
+    PaperlessBilling: str,
+    TotalCharges: float
+):
+    input_data = {
+        "gender": gender,
+        "Partner": Partner,
+        "Dependents": Dependents,
+        "PhoneService": PhoneService,
+        "PaperlessBilling": PaperlessBilling,
+        "TotalCharges": TotalCharges
+    }
+    return make_prediction(input_data)
+
+# shared prediction logic
+def make_prediction(input_data):
     try:
-        # 🔄 Convert values
+        # convert categorical values
         input_data["gender"] = gender_map.get(input_data["gender"], input_data["gender"])
         input_data["Partner"] = partner_map.get(input_data["Partner"], input_data["Partner"])
         input_data["Dependents"] = dependents_map.get(input_data["Dependents"], input_data["Dependents"])
