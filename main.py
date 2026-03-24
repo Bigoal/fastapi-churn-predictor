@@ -43,9 +43,6 @@ gender_map = {"Male": 1, "Female": 0}
 def normalize_input(input_data: dict) -> dict:
     row = input_data.copy()
 
-    # remove target if it is accidentally sent
-    row.pop("Churn", None)
-
     # type conversions
     if "SeniorCitizen" in row:
         row["SeniorCitizen"] = int(row["SeniorCitizen"])
@@ -59,7 +56,7 @@ def normalize_input(input_data: dict) -> dict:
     if "TotalCharges" in row:
         row["TotalCharges"] = float(row["TotalCharges"])
 
-    # binary mappings
+    # Mappings
     if "gender" in row:
         row["gender"] = gender_map.get(row["gender"], row["gender"])
 
@@ -126,12 +123,12 @@ def predict_page():
         <body style="text-align:center; font-family:Arial; padding:40px;">
             <h2>Select an Example</h2>
 
-            <a href="/predict?gender=Male&SeniorCitizen=0&Partner=No&Dependents=No&tenure=1&PhoneService=No&MultipleLines=No%20phone%20service&InternetService=Fiber%20optic&OnlineSecurity=No&OnlineBackup=No&DeviceProtection=No&TechSupport=No&StreamingTV=Yes&StreamingMovies=Yes&Contract=Month-to-month&PaperlessBilling=Yes&PaymentMethod=Electronic%20check&MonthlyCharges=79.85&TotalCharges=79.85">
-                <button style="padding:10px 20px; margin:10px; cursor:pointer;">Example 1</button>
+            <a href="/predict?gender=Male&SeniorCitizen=0&Partner=No&Dependents=No&tenure=1&PhoneService=No&MultipleLines=No%20phone%20service&InternetService=Fiber%20optic&OnlineSecurity=No&OnlineBackup=No&DeviceProtection=No&TechSupport=No&StreamingTV=Yes&StreamingMovies=Yes&Contract=0&PaperlessBilling=Yes&PaymentMethod=Electronic%20check&MonthlyCharges=79.85&TotalCharges=79.85">
+                <button style="padding:10px 20px; margin:10px; cursor:pointer;">High Risk Customer (Likely to Churn)</button>
             </a>
 
-            <a href="/predict?gender=Female&SeniorCitizen=0&Partner=Yes&Dependents=Yes&tenure=60&PhoneService=Yes&MultipleLines=Yes&InternetService=DSL&OnlineSecurity=Yes&OnlineBackup=Yes&DeviceProtection=Yes&TechSupport=Yes&StreamingTV=Yes&StreamingMovies=Yes&Contract=Two%20year&PaperlessBilling=No&PaymentMethod=Credit%20card%20%28automatic%29&MonthlyCharges=59.85&TotalCharges=3500.0">
-                <button style="padding:10px 20px; margin:10px; cursor:pointer;">Example 2</button>
+            <a href="/predict?gender=Female&SeniorCitizen=1&Partner=Yes&Dependents=Yes&tenure=60&PhoneService=Yes&MultipleLines=Yes&InternetService=DSL&OnlineSecurity=Yes&OnlineBackup=Yes&DeviceProtection=Yes&TechSupport=Yes&StreamingTV=Yes&StreamingMovies=Yes&Contract=2&PaperlessBilling=No&PaymentMethod=Credit%20card%20%28automatic%29&MonthlyCharges=59.85&TotalCharges=3500.0">
+                <button style="padding:10px 20px; margin:10px; cursor:pointer;">Loyal Customer (Low Churn Risk)</button>
             </a>
 
             <footer style="margin-top:50px; color:gray;">
